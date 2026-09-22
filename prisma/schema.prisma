@@ -36,12 +36,18 @@ model Lead {
   googlePlaceId     String?    @unique
   googleMapsUrl     String?
   websiteUrl        String?
+  websiteDomain     String?
   instagramUrl      String?
   instagramUsername String?
   hasWebsite        Boolean    @default(false)
   hasInstagram      Boolean    @default(false)
   hasBooking        Boolean?
   hasEcommerce      Boolean?
+  hasHttps          Boolean?
+  hasContactForm    Boolean?
+  hasWhatsApp       Boolean?
+  websiteAnalyzedAt DateTime?
+  enrichmentStatus  String?
   opportunity       String?
   opportunityReason String?
   leadScore         Int?
@@ -52,6 +58,7 @@ model Lead {
   outreachMessages  OutreachMessage[]
 
   @@index([businessName, location])
+  @@index([websiteDomain])
 }
 
 model OutreachMessage {
@@ -61,3 +68,7 @@ model OutreachMessage {
   message   String
   createdAt DateTime @default(now())
 }
+
+
+
+
