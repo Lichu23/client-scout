@@ -1,0 +1,3 @@
+import { credentialStatus } from "@/lib/config";
+export const dynamic="force-dynamic";
+export default function Settings(){const status=credentialStatus();return <div className="mx-auto max-w-3xl"><h1 className="text-3xl font-bold">Settings</h1><p className="mt-2 text-slate-600">Server-side configuration status. Secrets are never displayed.</p><div className="mt-8 divide-y rounded-2xl border bg-white">{[["Groq API",status.groq],["Google Places API",status.googlePlaces],["Database",status.database]].map(([name,ok])=><div className="flex items-center justify-between p-5" key={String(name)}><span className="font-medium">{name}</span><span className={ok?"text-emerald-600":"text-amber-600"}>{ok?"✓ Configured":"⚠ Missing"}</span></div>)}</div></div>}

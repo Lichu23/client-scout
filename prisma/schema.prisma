@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  REPLIED
+  INTERESTED
+  NOT_INTERESTED
+  CLIENT
+}
+
+model Search {
+  id             String   @id @default(cuid())
+  businessType   String
+  location       String
+  description    String?
+  requestedLeads Int
+  createdAt      DateTime @default(now())
+  leads          Lead[]
+}
+
+model Lead {
+  id                String     @id @default(cuid())
+  searchId          String
+  search            Search     @relation(fields: [searchId], references: [id], onDelete: Cascade)
+  businessName      String
+  businessType      String
+  location          String
+  googlePlaceId     String?    @unique
+  googleMapsUrl     String?
+  websiteUrl        String?
+  instagramUrl      String?
+  instagramUsername String?
+  hasWebsite        Boolean    @default(false)
+  hasInstagram      Boolean    @default(false)
+  hasBooking        Boolean?
+  hasEcommerce      Boolean?
+  opportunity       String?
+  opportunityReason String?
+  leadScore         Int?
+  scoreReasons      String?
+  status            LeadStatus @default(NEW)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  outreachMessages  OutreachMessage[]
+
+  @@index([businessName, location])
+}
+
+model OutreachMessage {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  message   String
+  createdAt DateTime @default(now())
+}
