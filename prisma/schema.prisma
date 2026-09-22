@@ -52,6 +52,9 @@ model Lead {
   opportunityReason String?
   leadScore         Int?
   scoreReasons      String?
+  suggestedOffer    String?
+  analysisConfidence String?
+  analysisEvidence  String?
   status            LeadStatus @default(NEW)
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt

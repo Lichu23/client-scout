@@ -1,0 +1,4 @@
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
+export async function GET(request: Request) { const u = new URL(request.url); const status = u.searchParams.get("status") as any; const q = u.searchParams.get("q") || undefined; const leads = await db.lead.findMany({ where: { ...(status ? { status } : {}), ...(q ? { OR: [{ businessName: { contains: q } }, { location: { contains: q } }] } : {}) }, orderBy: [{ leadScore: "desc" }, { createdAt: "desc" }] }); return NextResponse.json({ leads }); }
+export async function PATCH(request: Request) { const body = await request.json(); if (!body.id || !["NEW","CONTACTED","REPLIED","INTERESTED","NOT_INTERESTED","CLIENT"].includes(body.status)) return NextResponse.json({ error: "Invalid lead status." }, { status: 400 }); const lead = await db.lead.update({ where: { id: body.id }, data: { status: body.status } }); return NextResponse.json({ lead }); }

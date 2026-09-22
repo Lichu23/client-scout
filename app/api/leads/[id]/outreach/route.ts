@@ -1,0 +1,4 @@
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { generateOutreach } from "@/lib/services/ai-analyzer";
+export async function POST(_: Request, { params }: { params: Promise<{ id: string }> }) { const { id } = await params; const lead = await db.lead.findUnique({ where: { id } }); if (!lead) return NextResponse.json({ error: "Lead not found." }, { status: 404 }); const message = await generateOutreach({ businessName: lead.businessName, location: lead.location, website: lead.websiteUrl, instagram: lead.instagramUrl, opportunity: lead.opportunity, reason: lead.opportunityReason }); if (!message) return NextResponse.json({ error: "Groq is unavailable or not configured." }, { status: 503 }); const saved = await db.outreachMessage.create({ data: { leadId: id, message } }); return NextResponse.json({ message: saved }); }

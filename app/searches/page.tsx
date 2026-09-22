@@ -1,0 +1,2 @@
+import { db } from "@/lib/db";
+export default async function Searches(){const rows=await db.search.findMany({orderBy:{createdAt:"desc"},include:{_count:{select:{leads:true}}}});return <div><h1 className="text-3xl font-bold">Search history</h1><div className="mt-6 rounded-xl border bg-white p-4">{rows.map(s=><div key={s.id} className="border-b p-3 last:border-0"><b>{s.businessType}</b> · {s.location}<span className="float-right text-sm text-slate-500">{s._count.leads} leads · {s.createdAt.toLocaleDateString()}</span></div>)}</div></div>}
