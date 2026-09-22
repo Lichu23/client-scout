@@ -24,6 +24,7 @@ model Search {
   requestedLeads Int
   createdAt      DateTime @default(now())
   leads          Lead[]
+  appearances    SearchLead[]
 }
 
 model Lead {
@@ -44,6 +45,7 @@ model Lead {
   hasWebsite        Boolean    @default(false)
   hasInstagram      Boolean    @default(false)
   hasBooking        Boolean?
+  hasAppointment     Boolean?
   hasEcommerce      Boolean?
   hasHttps          Boolean?
   hasContactForm    Boolean?
@@ -64,6 +66,19 @@ model Lead {
 
   @@index([businessName, location])
   @@index([websiteDomain])
+  appearances       SearchLead[]
+}
+
+model SearchLead {
+  id        String   @id @default(cuid())
+  searchId  String
+  leadId    String
+  createdAt DateTime @default(now())
+  search    Search  @relation(fields: [searchId], references: [id], onDelete: Cascade)
+  lead      Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@unique([searchId, leadId])
+  @@index([searchId, createdAt])
 }
 
 model OutreachMessage {
