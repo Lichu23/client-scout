@@ -33,6 +33,8 @@ model Lead {
   businessName      String
   businessType      String
   location          String
+  phone             String?
+  source            String     @default("Google Places")
   googlePlaceId     String?    @unique
   googleMapsUrl     String?
   websiteUrl        String?
